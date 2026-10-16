@@ -3,7 +3,7 @@ import { BG_DATA_URI } from "./bg.generated.js";
 const TZ_MS = 8 * 3600 * 1000; // Asia/Taipei (UTC+8)
 const DAY = 86400000;
 
-/* ---------- GitHub 資料 ---------- */
+
 async function gql(env, query, variables) {
   const r = await fetch("https://api.github.com/graphql", {
     method: "POST",
@@ -33,7 +33,7 @@ async function fetchData(env) {
   const days = cc.contributionCalendar.weeks.flatMap((w) =>
     w.contributionDays.map((d) => [d.date, d.contributionCount])
   );
-  // 全部貢獻：逐年加總
+
   const years = cc.contributionYears;
   const fields = years
     .map(
@@ -46,7 +46,7 @@ async function fetchData(env) {
   return { days, total };
 }
 
-// 只有資料真的變動才寫入 KV（免費方案每日只有 1000 次寫入）
+
 async function refresh(env) {
   const data = await fetchData(env);
   const old = await env.CACHE.get("data");
@@ -55,7 +55,7 @@ async function refresh(env) {
   return data;
 }
 
-/* ---------- 統計 ---------- */
+
 export function calcStats(data, nowMs = Date.now()) {
   const now = new Date(nowMs + TZ_MS);
   const today = now.toISOString().slice(0, 10);
@@ -74,7 +74,7 @@ export function calcStats(data, nowMs = Date.now()) {
   return { day, week, month, year, all: data.total };
 }
 
-/* ---------- SVG ---------- */
+
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const LEVELS = ["#ffffff", "#9be9a8", "#40c463", "#30a14e", "#216e39"];
 const LEVEL_OPACITY = [0.4, 1, 1, 1, 1];
@@ -83,7 +83,7 @@ export function render(data, user) {
   const W = 1080, H = 310, CELL = 15, PITCH = 18, X0 = 68, Y0 = 148;
   const st = calcStats(data);
 
-  // 以「週一為每週第一天」分欄，取最近 53 週
+
   const cols = [];
   for (const [d, c] of data.days) {
     const row = (new Date(d + "T00:00:00Z").getUTCDay() + 6) % 7;
@@ -92,7 +92,7 @@ export function render(data, user) {
   }
   const shown = cols.slice(-53);
 
-  // 以非零天數的四分位數決定顏色深淺
+
   const nz = data.days.map((x) => x[1]).filter((c) => c > 0).sort((a, b) => a - b);
   const q = (p) => nz[Math.min(nz.length - 1, Math.floor(nz.length * p))] ?? 1;
   const t1 = q(0.25), t2 = q(0.5), t3 = q(0.75);
@@ -142,7 +142,7 @@ ${boxes}${months}${wd}${cells}${legend}
 </g></svg>`;
 }
 
-/* ---------- Worker ---------- */
+
 const NOCACHE = "no-cache, no-store, max-age=0, must-revalidate";
 
 export default {

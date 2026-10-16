@@ -1,5 +1,3 @@
-// 把 image/background.png 縮成 1080x310 JPEG 並轉成 base64，內嵌進 SVG
-// (SVG 放在 README 的 <img> 內無法載入外部圖片，所以必須內嵌)
 import sharp from "sharp";
 import { writeFileSync } from "node:fs";
 

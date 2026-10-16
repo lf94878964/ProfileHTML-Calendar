@@ -1,0 +1,18 @@
+name = "profilehtml"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+routes = [
+  { pattern = "profilehtml.calendar.ciallo.com", custom_domain = true }
+]
+
+# 每分鐘抓一次 GitHub 資料
+[triggers]
+crons = ["* * * * *"]
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "請填入 wrangler kv namespace create CACHE 產生的 id"
+
+[vars]
+GITHUB_USER = "lf94878964"

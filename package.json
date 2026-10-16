@@ -1,0 +1,11 @@
+{
+  "name": "profilehtml",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:bg": "node scripts/build-bg.mjs",
+    "dev": "wrangler dev --test-scheduled",
+    "deploy": "npm run build:bg && wrangler deploy"
+  },
+  "devDependencies": { "sharp": "^0.33.5", "wrangler": "^4.0.0" }
+}

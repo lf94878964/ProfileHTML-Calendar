@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-10-01"
 
 routes = [
-  { pattern = "profilehtml.calendar.ciallo.com", custom_domain = true }
+  { pattern = "profilehtml.calendar.ciallo.group", custom_domain = true }
 ]
 
 # 每分鐘抓一次 GitHub 資料

@@ -12,7 +12,7 @@ crons = ["* * * * *"]
 
 [[kv_namespaces]]
 binding = "CACHE"
-# 不填 id：wrangler 4.45+ 會在部署時自動建立並綁定 KV
+id = "58226a64b8fb4514970a79d012115438"
 
 [vars]
 GITHUB_USER = "lf94878964"

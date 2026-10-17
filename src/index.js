@@ -76,8 +76,17 @@ export function calcStats(data, nowMs = Date.now()) {
 
 /* ---------- SVG ---------- */
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const LEVELS = ["#ffffff", "#9be9a8", "#40c463", "#30a14e", "#216e39"];
-const LEVEL_OPACITY = [0.4, 1, 1, 1, 1];
+const LEVELS = [
+  "#ffe4ec", 
+  "#ffc2d4", 
+  "#ff9db9", 
+  "#ff7aa2", 
+  "#f94f86", 
+  "#e8296b", 
+  "#c2185b", 
+];
+
+const LEVEL_OPACITY = [0.35, 0.5, 0.58, 0.64, 0.7, 0.74, 0.78];
 
 export function render(data, user) {
   const W = 1080, H = 310, CELL = 15, PITCH = 18, X0 = 68, Y0 = 148;
@@ -95,8 +104,8 @@ export function render(data, user) {
 
   const nz = data.days.map((x) => x[1]).filter((c) => c > 0).sort((a, b) => a - b);
   const q = (p) => nz[Math.min(nz.length - 1, Math.floor(nz.length * p))] ?? 1;
-  const t1 = q(0.25), t2 = q(0.5), t3 = q(0.75);
-  const level = (c) => (c === 0 ? 0 : c <= t1 ? 1 : c <= t2 ? 2 : c <= t3 ? 3 : 4);
+  const ts = [1, 2, 3, 4, 5].map((i) => q(i / 6));
+  const level = (c) => (c === 0 ? 0 : 1 + ts.filter((t) => c > t).length);
 
   let cells = "", months = "";
   shown.forEach((col, i) => {
@@ -104,7 +113,7 @@ export function render(data, user) {
     col.forEach((cell, r) => {
       if (!cell) return;
       const l = level(cell[1]);
-      cells += `<rect x="${x}" y="${Y0 + r * PITCH}" width="${CELL}" height="${CELL}" rx="3" fill="${LEVELS[l]}" fill-opacity="${LEVEL_OPACITY[l]}" stroke="#b8c4bd" stroke-opacity=".35" stroke-width=".6"/>`;
+      cells += `<rect x="${x}" y="${Y0 + r * PITCH}" width="${CELL}" height="${CELL}" rx="3" fill="${LEVELS[l]}" fill-opacity="${LEVEL_OPACITY[l]}" stroke="#e59ab4" stroke-opacity=".35" stroke-width=".6"/>`;
     });
     const first = col.find((c) => c && c[0].endsWith("-01"));
     if (first && i > 0 && i < shown.length - 1)
@@ -123,10 +132,11 @@ export function render(data, user) {
 <text x="${x + 95}" y="98" text-anchor="middle" class="n">${n.toLocaleString("en-US")}</text>`;
   }).join("");
 
-  const lx = X0 + 53 * PITCH - 5 * PITCH - 52;
+  const N = LEVELS.length;
+  const lx = X0 + 53 * PITCH - N * PITCH - 52;
   const legend = `<text x="${lx - 6}" y="${H - 18}" text-anchor="end" class="s">少</text>` +
-    LEVELS.map((c, i) => `<rect x="${lx + i * PITCH}" y="${H - 30}" width="${CELL}" height="${CELL}" rx="3" fill="${c}" fill-opacity="${LEVEL_OPACITY[i]}" stroke="#b8c4bd" stroke-opacity=".35" stroke-width=".6"/>`).join("") +
-    `<text x="${lx + 5 * PITCH + 4}" y="${H - 18}" class="s">多</text>`;
+    LEVELS.map((c, i) => `<rect x="${lx + i * PITCH}" y="${H - 30}" width="${CELL}" height="${CELL}" rx="3" fill="${c}" fill-opacity="${LEVEL_OPACITY[i]}" stroke="#e59ab4" stroke-opacity=".35" stroke-width=".6"/>`).join("") +
+    `<text x="${lx + N * PITCH + 4}" y="${H - 18}" class="s">多</text>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <style>

@@ -1,6 +1,6 @@
 import { BG_DATA_URI } from "./bg.generated.js";
 
-const TZ_MS = 8 * 3600 * 1000; // Asia/Taipei (UTC+8)
+const TZ_MS = 0 #8 * 3600 * 1000; // Asia/Taipei (UTC+8)
 const DAY = 86400000;
 
 
